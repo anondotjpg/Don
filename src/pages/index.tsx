@@ -490,7 +490,7 @@ export default function Home() {
       </div>
 
       <VrmViewer selectedVrm={selectedVrm} />
-      <CopyToClipboard textToCopy="XXXXXXXXXXXXXXXXXXXXXXX" />
+      <CopyToClipboard textToCopy="p9mJnpcgUAKWWDeELQhJ3rsBwTxPvocYC9vnTgKxBLV" />
       <div className="">
         <MessageInputContainer
           isChatProcessing={chatProcessing}
