@@ -49,7 +49,7 @@ export default function Home() {
   const [restreamTokens, setRestreamTokens] = useState<any>(null);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isAISpeaking, setIsAISpeaking] = useState(false);
-  const [selectedVrm, setSelectedVrm] = useState<number>(1);
+  const [selectedVrm, setSelectedVrm] = useState<number>(4);
   const [openRouterKey, setOpenRouterKey] = useState<string>(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('openRouterKey') || '';
