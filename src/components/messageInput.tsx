@@ -23,11 +23,11 @@ export const MessageInput = ({
   onClickSendButton,
 }: Props) => {
   const templateMessages = [
-    "what's up",
-    "go deep", 
-    "what are you?",
-    "surprise me",
-    "inspire me"
+    "what's happening?",
+    "trending now", 
+    "for you",
+    "explore",
+    "spaces"
   ];
 
   const handleTemplateClick = (template: string) => {
@@ -50,19 +50,20 @@ export const MessageInput = ({
         left: 0,
         right: 0,
         zIndex: 20,
-        padding: '16px',
+        padding: '30px 16px',
       }}
     >
       {/* Template Messages */}
       {!userMessage && !isChatProcessing && (
         <div 
           style={{
-            maxWidth: '800px',
-            margin: '0 auto 12px auto',
+            maxWidth: '600px',
+            margin: '0 auto 16px auto',
             display: 'flex',
-            gap: '8px',
+            gap: '12px',
             flexWrap: 'wrap',
             justifyContent: 'center',
+            opacity: 0
           }}
         >
           {templateMessages.map((template, index) => (
@@ -70,25 +71,15 @@ export const MessageInput = ({
               key={index}
               onClick={() => handleTemplateClick(template)}
               style={{
-                backgroundColor: '#F7F7F8',
-                border: '1px solid #E5E5E5',
-                borderRadius: '20px',
-                padding: '8px 16px',
-                color: '#374151',
-                fontSize: '14px',
+                backgroundColor: '#000000',
+                borderRadius: '12px',
+                padding: '6px 12px',
+                color: '#E7E9EA',
+                fontSize: '15px',
+                fontWeight: '400',
                 cursor: 'pointer',
-                transition: 'all 0.2s ease',
                 whiteSpace: 'nowrap',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#ECECF1';
-                e.currentTarget.style.borderColor = '#D1D5DB';
-                e.currentTarget.style.color = '#111827';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#F7F7F8';
-                e.currentTarget.style.borderColor = '#E5E5E5';
-                e.currentTarget.style.color = '#374151';
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
               }}
             >
               {template}
@@ -100,25 +91,24 @@ export const MessageInput = ({
       {/* Main Input Container */}
       <div 
         style={{
-          maxWidth: '800px',
+          maxWidth: '600px',
           margin: '0 auto',
           display: 'flex',
           alignItems: 'center',
           gap: '12px',
-          backgroundColor: '#FFFFFF',
-          borderRadius: '16px',
-          padding: '8px 12px',
-          border: '1px solid #E5E5E5',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
+          backgroundColor: '#000000',
+          borderRadius: '24px',
+          padding: '10px 20px',
+          position: 'relative',
         }}
       >
         <button
           disabled={isChatProcessing}
           onClick={onClickMicButton}
           style={{
-            backgroundColor: isMicRecording ? '#10A37F' : 'transparent',
+            backgroundColor: isMicRecording ? '#1D9BF0' : 'transparent',
             border: 'none',
-            borderRadius: '8px',
+            borderRadius: '50%',
             padding: '8px',
             cursor: isChatProcessing ? 'not-allowed' : 'pointer',
             fontSize: '16px',
@@ -127,27 +117,29 @@ export const MessageInput = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            width: '40px',
+            height: '40px',
           }}
           onMouseEnter={(e) => {
             if (!isChatProcessing) {
-              e.currentTarget.style.backgroundColor = isMicRecording ? '#0D8A68' : '#F7F7F8';
+              e.currentTarget.style.backgroundColor = isMicRecording ? '#1A8CD8' : 'rgba(29, 155, 240, 0.1)';
             }
           }}
           onMouseLeave={(e) => {
             if (!isChatProcessing) {
-              e.currentTarget.style.backgroundColor = isMicRecording ? '#10A37F' : 'transparent';
+              e.currentTarget.style.backgroundColor = isMicRecording ? '#1D9BF0' : 'transparent';
             }
           }}
         >
           {(HiMicrophone as any)({ 
             size: 20, 
-            color: isMicRecording ? '#FFFFFF' : '#6B7280' 
+            color: isMicRecording ? '#FFFFFF' : '#1D9BF0' 
           })}
         </button>
 
         <input
           type="text"
-          placeholder="speak to your fren"
+          placeholder="What is happening?!"
           value={userMessage}
           onChange={onChangeUserMessage}
           onKeyDown={onKeyDownUserMessage}
@@ -156,10 +148,12 @@ export const MessageInput = ({
             flex: 1,
             backgroundColor: 'transparent',
             border: 'none',
-            color: '#111827',
+            color: '#E7E9EA',
             fontSize: '16px',
+            fontWeight: '400',
             outline: 'none',
-            padding: '8px 0',
+            padding: '6px 0',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
           }}
         />
 
@@ -168,8 +162,8 @@ export const MessageInput = ({
             style={{
               width: '20px',
               height: '20px',
-              border: '2px solid #E5E5E5',
-              borderTop: '2px solid #10A37F',
+              border: '2px solid #2F3336',
+              borderTop: '2px solid #1D9BF0',
               borderRadius: '50%',
               animation: 'spin 1s linear infinite',
             }}
@@ -179,10 +173,10 @@ export const MessageInput = ({
             disabled={!userMessage}
             onClick={onClickSendButton}
             style={{
-              backgroundColor: userMessage ? '#10A37F' : '#E5E5E5',
+              backgroundColor: userMessage ? '#1D9BF0' : '#2F3336',
               border: 'none',
-              borderRadius: '8px',
-              padding: '8px 12px',
+              borderRadius: '50%',
+              padding: '10px',
               cursor: userMessage ? 'pointer' : 'not-allowed',
               fontSize: '16px',
               transition: 'all 0.2s ease',
@@ -190,21 +184,24 @@ export const MessageInput = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              width: '40px',
+              height: '40px',
+              opacity: userMessage ? 1 : 0.5,
             }}
             onMouseEnter={(e) => {
               if (userMessage) {
-                e.currentTarget.style.backgroundColor = '#0D8A68';
+                e.currentTarget.style.backgroundColor = '#1A8CD8';
               }
             }}
             onMouseLeave={(e) => {
               if (userMessage) {
-                e.currentTarget.style.backgroundColor = '#10A37F';
+                e.currentTarget.style.backgroundColor = '#1D9BF0';
               }
             }}
           >
             {(HiPaperAirplane as any)({ 
-              size: 20, 
-              color: userMessage ? '#FFFFFF' : '#9CA3AF' 
+              size: 18, 
+              color: '#FFFFFF'
             })}
           </button>
         )}
@@ -215,6 +212,10 @@ export const MessageInput = ({
           @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+          }
+          
+          input::placeholder {
+            color: #536471 !important;
           }
         `}
       </style>

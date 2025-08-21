@@ -21,6 +21,7 @@ import { buildUrl } from "@/utils/buildUrl";
 import { websocketService } from '../services/websocketService';
 import { MessageMiddleOut } from "@/features/messages/messageMiddleOut";
 import { CopyToClipboard } from "@/components/copy";
+import Computer3DWithVrm from "@/components/computer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -67,7 +68,11 @@ export default function Home() {
       setElevenLabsParam(params.elevenLabsParam);
       setChatLog(params.chatLog);
     }
-    setElevenLabsKey(process.env.ELEVENLABS_API_KEY as string);
+    
+    // Get API keys from environment variables
+    setOpenAiKey(process.env.NEXT_PUBLIC_OPENAI_API_KEY as string || "");
+    setElevenLabsKey(process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY as string || "");
+    
     // load openrouter key from localStorage
     const savedOpenRouterKey = localStorage.getItem('openRouterKey');
     if (savedOpenRouterKey) {
@@ -91,8 +96,6 @@ export default function Home() {
         JSON.stringify({ systemPrompt, elevenLabsParam, chatLog })
       )
 
-      // store separately to be backward compatible with local storage data
-      window.localStorage.setItem("elevenLabsKey", elevenLabsKey);
       // Save VRM selection
       window.localStorage.setItem("selectedVrm", selectedVrm.toString());
     }
@@ -316,181 +319,9 @@ export default function Home() {
   return (
     <div className={inter.className}>
       <Meta />
-      
-      {/* VRM Selector in top left */}
-      <div style={{ 
-        position: 'fixed', 
-        top: '20px', 
-        left: '20px', 
-        zIndex: 1000,
-        display: 'grid',
-        gap: '10px',
-        alignItems: 'center'
-      }}>
-        <button
-          onClick={() => handleVrmChange(1)}
-          style={{
-            padding: '0',
-            backgroundColor: selectedVrm === 1 ? '#1D9BF0' : '#666',
-            border: selectedVrm === 1 ? '3px solid #1D9BF0' : '3px solid #666',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            width: '50px',
-            height: '50px',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <img
-            src="/og.png"
-            alt="VRM 1"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              borderRadius: '50%'
-            }}
-          />
-        </button>
-        <button
-          onClick={() => handleVrmChange(2)}
-          style={{
-            padding: '0',
-            backgroundColor: selectedVrm === 2 ? '#1D9BF0' : '#666',
-            border: selectedVrm === 2 ? '3px solid #1D9BF0' : '3px solid #666',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            width: '50px',
-            height: '50px',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <img
-            src="/og2.png"
-            alt="VRM 2"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              borderRadius: '50%'
-            }}
-          />
-        </button>
-        <button
-          onClick={() => handleVrmChange(3)}
-          style={{
-            padding: '0',
-            backgroundColor: selectedVrm === 3 ? '#1D9BF0' : '#666',
-            border: selectedVrm === 3 ? '3px solid #1D9BF0' : '3px solid #666',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            width: '50px',
-            height: '50px',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <img
-            src="/og3.png"
-            alt="VRM 3"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              borderRadius: '50%'
-            }}
-          />
-        </button>
-        <button
-          onClick={() => handleVrmChange(4)}
-          style={{
-            padding: '0',
-            backgroundColor: selectedVrm === 4 ? '#1D9BF0' : '#666',
-            border: selectedVrm === 4 ? '3px solid #1D9BF0' : '3px solid #666',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            width: '50px',
-            height: '50px',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <img
-            src="/og4.png"
-            alt="VRM 4"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              borderRadius: '50%'
-            }}
-          />
-        </button>
-        
-        {/* Add New VRM Button */}
-        <div style={{ position: 'relative' }}>
-          <button
-            disabled
-            style={{
-              padding: '0',
-              backgroundColor: '#333',
-              border: '3px solid #333',
-              borderRadius: '50%',
-              cursor: 'not-allowed',
-              width: '50px',
-              height: '50px',
-              overflow: 'hidden',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              opacity: 0.6
-            }}
-          >
-            <svg 
-              width="24" 
-              height="24" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="#999" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-            >
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-          </button>
-          
-          {/* Soon Tag */}
-          <div style={{
-            position: 'absolute',
-            top: '-2px',
-            right: '-5px',
-            backgroundColor: '#364153',
-            color: 'white',
-            fontSize: '6px',
-            fontWeight: 'bold',
-            padding: '1px 3px',
-            borderRadius: '10px',
-            textTransform: 'uppercase',
-            letterSpacing: '0.5px'
-          }}>
-            Soon
-          </div>
-        </div>
-      </div>
 
-      <VrmViewer selectedVrm={selectedVrm} />
-      <CopyToClipboard textToCopy="p9mJnpcgUAKWWDeELQhJ3rsBwTxPvocYC9vnTgKxBLV" />
+      <Computer3DWithVrm selectedVrm={4} />
+      <CopyToClipboard textToCopy="1234pump" />
       <div className="">
         <MessageInputContainer
           isChatProcessing={chatProcessing}

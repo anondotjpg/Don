@@ -2,9 +2,9 @@ import { buildUrl } from "@/utils/buildUrl";
 import Head from "next/head";
 
 export const Meta = () => {
-  const title = "frens | digital companions";
+  const title = "grokbot";
   const description =
-    "interact with your internet frens";
+    "grok in a computer";
   const imageUrl = "/d.png";
   const faviconUrl = "/d.ico";  // Replace with your favicon path if different
 
