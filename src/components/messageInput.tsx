@@ -1,5 +1,6 @@
 import React from 'react';
 import { HiMicrophone, HiPaperAirplane } from 'react-icons/hi2';
+import { RiSendPlaneFill } from "react-icons/ri";
 
 type Props = {
   userMessage: string;
@@ -199,7 +200,7 @@ export const MessageInput = ({
               }
             }}
           >
-            {(HiPaperAirplane as any)({ 
+            {(RiSendPlaneFill as any)({ 
               size: 18, 
               color: '#FFFFFF'
             })}
