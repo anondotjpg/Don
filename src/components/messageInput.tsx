@@ -183,13 +183,12 @@ export const MessageInput = ({
               alignItems: 'center',
               justifyContent: 'center',
               width: '40px',
-              height: '40px',
-              opacity: userMessage ? 1 : 0.5,
+              height: '40px'
             }}
           >
             {(RiSendPlaneFill as any)({ 
               size: 18, 
-              color: userMessage ? '#1D9BF0' : '#FFFFFF'
+              color: userMessage ? '#1D9BF0' : '#808080'
             })}
           </button>
         )}
