@@ -80,7 +80,7 @@ export const MessageInput = ({
                 fontWeight: '400',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
-                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+                fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
               }}
             >
               {template}
@@ -154,7 +154,7 @@ export const MessageInput = ({
             fontWeight: '400',
             outline: 'none',
             padding: '6px 0',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+            fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace'
           }}
         />
 
