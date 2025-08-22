@@ -10,7 +10,7 @@ interface HyperTextProps {
 const HyperText: React.FC<HyperTextProps> = ({ 
   text, 
   className = "",
-  animationDuration = 2000,
+  animationDuration = 3000,
   scrambleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"
 }) => {
   const [displayText, setDisplayText] = useState("");
