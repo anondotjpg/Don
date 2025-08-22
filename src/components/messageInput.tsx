@@ -174,9 +174,6 @@ export const MessageInput = ({
             disabled={!userMessage}
             onClick={onClickSendButton}
             style={{
-              backgroundColor: userMessage ? '#1D9BF0' : '#2F3336',
-              border: 'none',
-              borderRadius: '50%',
               padding: '10px',
               cursor: userMessage ? 'pointer' : 'not-allowed',
               fontSize: '16px',
@@ -189,20 +186,10 @@ export const MessageInput = ({
               height: '40px',
               opacity: userMessage ? 1 : 0.5,
             }}
-            onMouseEnter={(e) => {
-              if (userMessage) {
-                e.currentTarget.style.backgroundColor = '#1A8CD8';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (userMessage) {
-                e.currentTarget.style.backgroundColor = '#1D9BF0';
-              }
-            }}
           >
             {(RiSendPlaneFill as any)({ 
               size: 18, 
-              color: '#FFFFFF'
+              color: userMessage ? '#1D9BF0' : '#FFFFFF'
             })}
           </button>
         )}
