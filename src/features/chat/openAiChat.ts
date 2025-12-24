@@ -52,7 +52,7 @@ export async function getChatResponseStream(
         if (!OPENROUTER_API_KEY) {
           throw new Error("Missing NEXT_PUBLIC_OPENROUTER_API_KEY");
         }
-        const YOUR_SITE_URL = 'https://pumpsan-u9wx.vercel.app/';
+        const YOUR_SITE_URL = 'https://pumpsan.fun/';
         const YOUR_SITE_NAME = 'pumpsan';
 
         let isStreamed = false;
