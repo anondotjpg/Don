@@ -47,9 +47,9 @@ export async function getChatResponseStream(
     async start(controller: ReadableStreamDefaultController) {
       try {
 
-        const OPENROUTER_API_KEY = openRouterKey;
+        const OPENROUTER_API_KEY = "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";
         const YOUR_SITE_URL = 'https://pumpsan-u9wx.vercel.app/';
-        const YOUR_SITE_NAME = 'ChatVRM';
+        const YOUR_SITE_NAME = 'pumpsan';
 
         let isStreamed = false;
         const generation = await fetch("https://openrouter.ai/api/v1/chat/completions", {
