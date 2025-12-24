@@ -47,7 +47,11 @@ export async function getChatResponseStream(
     async start(controller: ReadableStreamDefaultController) {
       try {
 
-        const OPENROUTER_API_KEY = "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";
+        const OPENROUTER_API_KEY = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY;
+
+        if (!OPENROUTER_API_KEY) {
+          throw new Error("Missing NEXT_PUBLIC_OPENROUTER_API_KEY");
+        }
         const YOUR_SITE_URL = 'https://pumpsan-u9wx.vercel.app/';
         const YOUR_SITE_NAME = 'pumpsan';
 
