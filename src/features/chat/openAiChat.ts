@@ -47,7 +47,7 @@ export async function getChatResponseStream(
     async start(controller: ReadableStreamDefaultController) {
       try {
 
-        const OPENROUTER_API_KEY = "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";
+        const OPENROUTER_API_KEY = "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";
         const YOUR_SITE_URL = 'https://pumpsan-u9wx.vercel.app/';
         const YOUR_SITE_NAME = 'pumpsan';
 
@@ -66,6 +66,7 @@ export async function getChatResponseStream(
             // "model": "cohere/command-r-plus",
             // "model": "anthropic/claude-3.5-sonnet:beta",
             "model": "x-ai/grok-4",
+            "messages": messages, // Now using the messages array directly
             "temperature": 0.7,
             "max_tokens": 200,
             "stream": true,
