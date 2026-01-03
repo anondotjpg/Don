@@ -1,152 +1,141 @@
 import { Message } from "../messages/messages";
-import { getWindowAI } from 'window.ai';
 
-export async function getChatResponse(messages: Message[], apiKey: string) {
-  // function currently not used
-  throw new Error("Not implemented");
+/**
+ * Fetch BBC World News RSS and convert to compact LLM context
+ * Server-safe via Next.js API route
+ */
+async function getNewsContext(): Promise<string | null> {
+  try {
+    const res = await fetch("/api/bbc-news");
+    if (!res.ok) return null;
 
-  /*
-  if (!apiKey) {
-    throw new Error("Invalid API Key");
+    const xmlText = await res.text();
+
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(xmlText, "text/xml");
+
+    const items = Array.from(xml.querySelectorAll("item")).slice(0, 5);
+
+    if (items.length === 0) return null;
+
+    const headlines = items.map((item, i) => {
+      const title = item.querySelector("title")?.textContent?.trim();
+      return title ? `${i + 1}. ${title}` : null;
+    }).filter(Boolean);
+
+    return [
+      "Current world news headlines (BBC):",
+      ...headlines,
+    ].join("\n");
+  } catch (err) {
+    console.warn("Failed to load news context", err);
+    return null;
   }
-
-  const configuration = new Configuration({
-    apiKey: apiKey,
-  });
-  // ブラウザからAPIを叩くときに発生するエラーを無くすworkaround
-  // https://github.com/openai/openai-node/issues/6#issuecomment-1492814621
-  delete configuration.baseOptions.headers["User-Agent"];
-
-  const openai = new OpenAIApi(configuration);
-
-  const { data } = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: messages,
-  });
-
-  const [aiRes] = data.choices;
-  const message = aiRes.message?.content || "エラーが発生しました";
-
-  return { message: message };
-  */
 }
 
+/**
+ * Streaming chat completion with injected live news context
+ */
 export async function getChatResponseStream(
-  messages: Message[], // Changed from string to Message[]
+  messages: Message[],
   apiKey: string,
   openRouterKey: string
 ) {
-  // TODO: remove usages of apiKey in code
-  /*
-  if (!apiKey) {
-    throw new Error("Invalid API Key");
-  }
-  */
-
   const stream = new ReadableStream({
-    async start(controller: ReadableStreamDefaultController) {
+    async start(controller) {
       try {
-
-        const OPENROUTER_API_KEY = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY;
+        const OPENROUTER_API_KEY =
+          openRouterKey || process.env.NEXT_PUBLIC_OPENROUTER_API_KEY;
 
         if (!OPENROUTER_API_KEY) {
-          throw new Error("Missing NEXT_PUBLIC_OPENROUTER_API_KEY");
+          throw new Error("Missing OpenRouter API key");
         }
-        const YOUR_SITE_URL = 'https://pumpsan.fun/';
-        const YOUR_SITE_NAME = 'pumpsan';
 
-        let isStreamed = false;
-        const generation = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
-            "HTTP-Referer": `${YOUR_SITE_URL}`, // Optional, for including your app on openrouter.ai rankings.
-            "X-Title": `${YOUR_SITE_NAME}`, // Optional. Shows in rankings on openrouter.ai.
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            // "model": "cohere/command",
-            // "model": "openai/gpt-3.5-turbo",
-            // "model": "cohere/command-r-plus",
-            // "model": "anthropic/claude-3.5-sonnet:beta",
-            "model": "x-ai/grok-4-fast",
-            "messages": messages, // Now using the messages array directly
-            "temperature": 0.7,
-            "max_tokens": 200,
-            "stream": true,
-          })
-        });
+        const YOUR_SITE_URL = "https://www.donthedog.com/";
+        const YOUR_SITE_NAME = "Don the Dog";
 
-        if (generation.body) {
-          const reader = generation.body.getReader();
-          try {
-            while (true) {
-              const { done, value } = await reader.read();
-              if (done) break;
+        // 🔹 Fetch live news context
+        const newsContext = await getNewsContext();
 
-              // Assuming the stream is text, convert the Uint8Array to a string
-              let chunk = new TextDecoder().decode(value);
-              // Process the chunk here (e.g., append it to the controller for streaming to the client)
+        // 🔹 Build final messages with injected context
+        const finalMessages: Message[] = [];
 
-              // split the chunk into lines
-              let lines = chunk.split('\n');
+        // Preserve original system message if present
+        if (messages.length && messages[0].role === "system") {
+          finalMessages.push(messages[0]);
+          messages = messages.slice(1);
+        }
 
-              const SSE_COMMENT = ": OPENROUTER PROCESSING";
+        // Inject news context as transient system message
+        if (newsContext) {
+          finalMessages.push({
+            role: "system",
+            content:
+              "You may use the following current world news as factual context if relevant:\n\n" +
+              newsContext,
+          });
+        }
 
-              // filter out lines that start with SSE_COMMENT
-              lines = lines.filter((line) => !line.trim().startsWith(SSE_COMMENT));
+        // Append remaining conversation
+        finalMessages.push(...messages);
 
-              // filter out lines that end with "data: [DONE]"
-              lines = lines.filter((line) => !line.trim().endsWith("data: [DONE]"));
-
-              // Filter out empty lines and lines that do not start with "data:"
-              const dataLines = lines.filter(line => line.startsWith("data:"));
-
-              // Extract and parse the JSON from each data line
-              const parsedMessages = dataLines.map(line => {
-                // Remove the "data: " prefix and parse the JSON
-                const jsonStr = line.substring(5); // "data: ".length == 5
-                return JSON.parse(jsonStr);
-              });
-
-              // loop through messages and enqueue them to the controller
-
-              try {
-                parsedMessages.forEach((message) => {
-                  const content = message.choices[0].delta.content;
-
-                  controller.enqueue(content);
-                });
-              } catch (error) {
-                // log error for debugging if needed
-                console.error('Error processing stream messages:', error);
-                throw error;
-              }
-
-              // Parse the chunk as JSON
-              // const parsedChunk = JSON.parse(chunk);
-              // Access the content
-              // const content = parsedChunk.choices[0].delta.content;
-
-              // enqueue the content to the controller
-              // controller.enqueue(content);
-
-              isStreamed = true;
-            }
-          } catch (error) {
-            console.error('Error reading the stream', error);
-          } finally {
-            reader.releaseLock();
+        const generation = await fetch(
+          "https://openrouter.ai/api/v1/chat/completions",
+          {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+              "HTTP-Referer": YOUR_SITE_URL,
+              "X-Title": YOUR_SITE_NAME,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              model: "x-ai/grok-4-fast",
+              messages: finalMessages,
+              temperature: 0.7,
+              max_tokens: 200,
+              stream: true,
+            }),
           }
+        );
+
+        if (!generation.body) {
+          throw new Error("No response body from OpenRouter");
         }
 
-        // handle case where streaming is not supported
-        if (!isStreamed) {
-          console.error('Streaming not supported! Need to handle this case.');
-          // controller.enqueue(response[0].message.content);
+        const reader = generation.body.getReader();
+        const decoder = new TextDecoder();
+
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value);
+            const lines = chunk
+              .split("\n")
+              .filter(
+                (line) =>
+                  line.startsWith("data:") &&
+                  !line.includes("[DONE]") &&
+                  !line.includes(": OPENROUTER PROCESSING")
+              );
+
+            for (const line of lines) {
+              try {
+                const json = JSON.parse(line.replace("data: ", ""));
+                const content = json?.choices?.[0]?.delta?.content;
+                if (content) controller.enqueue(content);
+              } catch (err) {
+                console.error("Stream parse error", err);
+              }
+            }
+          }
+        } finally {
+          reader.releaseLock();
         }
-      } catch (error) {
-        controller.error(error);
+      } catch (err) {
+        controller.error(err);
       } finally {
         controller.close();
       }
