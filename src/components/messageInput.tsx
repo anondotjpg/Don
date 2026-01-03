@@ -1,6 +1,6 @@
 import React from 'react';
 import { HiMicrophone } from 'react-icons/hi2';
-import { RiSendPlaneFill } from "react-icons/ri";
+import { RiSendPlaneFill } from 'react-icons/ri';
 
 type Props = {
   userMessage: string;
@@ -9,14 +9,15 @@ type Props = {
   onChangeUserMessage: (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
-  onKeyDownUserMessage: (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onKeyDownUserMessage: (
+    event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   onClickSendButton: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onClickMicButton: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
-/** 🟠 Bonk.fun orange */
+/** 🟠 Accent */
 const BONK_ORANGE = '#FF9A00';
-const BONK_ORANGE_DARK = '#FF8700';
 
 export const MessageInput = ({
   userMessage,
@@ -29,188 +30,182 @@ export const MessageInput = ({
 }: Props) => {
   const templateMessages = [
     "what's happening?",
-    "trending now",
-    "for you",
-    "explore",
-    "spaces",
+    'trending now',
+    'for you',
+    'explore',
+    'spaces',
   ];
 
   const handleTemplateClick = (template: string) => {
     if (!isChatProcessing) {
-      const syntheticEvent = {
+      onChangeUserMessage({
         target: { value: template },
         currentTarget: { value: template },
-      } as React.ChangeEvent<HTMLInputElement>;
-
-      onChangeUserMessage(syntheticEvent);
+      } as React.ChangeEvent<HTMLInputElement>);
     }
   };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 20,
-        padding: '30px 16px',
-      }}
-    >
-      {/* Template Messages */}
+    <div className="win95-root">
       {!userMessage && !isChatProcessing && (
-        <div
-          style={{
-            maxWidth: '600px',
-            margin: '0 auto 16px auto',
-            display: 'flex',
-            gap: '12px',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            opacity: 0,
-          }}
-        >
-          {templateMessages.map((template, index) => (
+        <div className="win95-templates">
+          {templateMessages.map((t) => (
             <button
-              key={index}
-              onClick={() => handleTemplateClick(template)}
-              style={{
-                backgroundColor: '#000000',
-                borderRadius: '12px',
-                padding: '6px 12px',
-                color: '#E7E9EA',
-                fontSize: '15px',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                fontFamily:
-                  'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
-              }}
+              key={t}
+              className="win95-btn"
+              onClick={() => handleTemplateClick(t)}
             >
-              {template}
+              {t}
             </button>
           ))}
         </div>
       )}
 
-      {/* Main Input Container */}
-      <div
-        style={{
-          maxWidth: '600px',
-          margin: '0 auto',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          backgroundColor: '#000000',
-          borderRadius: '24px',
-          padding: '10px 20px',
-        }}
-      >
-        {/* Mic Button */}
-        <button
-          disabled={isChatProcessing}
-          onClick={onClickMicButton}
-          style={{
-            backgroundColor: isMicRecording ? BONK_ORANGE : 'transparent',
-            border: 'none',
-            borderRadius: '50%',
-            padding: '8px',
-            cursor: isChatProcessing ? 'not-allowed' : 'pointer',
-            opacity: isChatProcessing ? 0.5 : 1,
-            transition: 'all 0.2s ease',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '40px',
-            height: '40px',
-          }}
-          onMouseEnter={(e) => {
-            if (!isChatProcessing) {
-              e.currentTarget.style.backgroundColor = isMicRecording
-                ? BONK_ORANGE_DARK
-                : 'rgba(255, 154, 0, 0.14)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (!isChatProcessing) {
-              e.currentTarget.style.backgroundColor = isMicRecording
-                ? BONK_ORANGE
-                : 'transparent';
-            }
-          }}
-        >
-          <HiMicrophone
-            size={20}
-            color={isMicRecording ? '#000000' : BONK_ORANGE}
-          />
-        </button>
-
-        {/* Input */}
-        <input
-          type="text"
-          placeholder="What is happening?!"
-          value={userMessage}
-          onChange={onChangeUserMessage}
-          onKeyDown={onKeyDownUserMessage}
-          disabled={isChatProcessing}
-          style={{
-            flex: 1,
-            backgroundColor: 'transparent',
-            border: 'none',
-            color: '#E7E9EA',
-            fontSize: '14px',
-            outline: 'none',
-            padding: '6px 0',
-            fontFamily:
-              'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
-          }}
-        />
-
-        {/* Send / Spinner */}
-        {isChatProcessing ? (
-          <div
-            style={{
-              width: '20px',
-              height: '20px',
-              border: '2px solid #2F3336',
-              borderTop: `2px solid ${BONK_ORANGE}`,
-              borderRadius: '50%',
-              animation: 'spin 1s linear infinite',
-            }}
-          />
-        ) : (
+      <div className="win95-window">
+        <div className="win95-content">
           <button
-            disabled={!userMessage}
-            onClick={onClickSendButton}
-            style={{
-              padding: '10px',
-              cursor: userMessage ? 'pointer' : 'not-allowed',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '40px',
-              height: '40px',
-            }}
+            className={`win95-btn ${isMicRecording ? 'active' : ''}`}
+            disabled={isChatProcessing}
+            onClick={onClickMicButton}
           >
-            <RiSendPlaneFill
-              size={18}
-              color={userMessage ? BONK_ORANGE : '#808080'}
-            />
+            <HiMicrophone size={14} />
           </button>
-        )}
+
+          <input
+            type="text"
+            value={userMessage}
+            placeholder="What is happening?!"
+            disabled={isChatProcessing}
+            onChange={onChangeUserMessage}
+            onKeyDown={onKeyDownUserMessage}
+            className="win95-input"
+          />
+
+          {isChatProcessing ? (
+            <div className="win95-spinner" />
+          ) : (
+            <button
+              className="win95-btn"
+              disabled={!userMessage}
+              onClick={onClickSendButton}
+            >
+              <RiSendPlaneFill size={14} />
+            </button>
+          )}
+        </div>
       </div>
 
-      <style>
-        {`
-          @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-          }
+      <style>{`
+        /* ROOT */
+        .win95-root {
+          position: fixed;
+          bottom: 20px;
+          left: 8px;
+          right: 8px;
+          z-index: 20;
+          font-family: 'MS Sans Serif', Tahoma, Arial, sans-serif;
+          font-size: 13px;
+        }
 
-          input::placeholder {
-            color: #536471 !important;
-          }
-        `}
-      </style>
+        .win95-templates {
+          max-width: 640px;
+          margin: 0 auto 6px auto;
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+          padding: 6px;
+          justify-content: center;   /* 👈 CENTER HORIZONTALLY */
+          align-items: center;
+          background: #c0c0c0;
+          border-top: 2px solid #fff;
+          border-left: 2px solid #fff;
+          border-right: 2px solid #808080;
+          border-bottom: 2px solid #808080;
+        }
+
+
+        /* WINDOW */
+        .win95-window {
+          max-width: 640px;
+          margin: 0 auto;
+          background: #c0c0c0;
+          border-top: 2px solid #fff;
+          border-left: 2px solid #fff;
+          border-right: 2px solid #404040;
+          border-bottom: 2px solid #404040;
+        }
+
+        .win95-content {
+          padding: 6px;
+          display: grid;
+          grid-template-columns: auto 1fr auto;
+          gap: 6px;
+          align-items: center;
+        }
+
+        /* BUTTON */
+        .win95-btn {
+          min-width: 32px;
+          height: 28px;
+          padding: 0 6px;
+          background: #c0c0c0;
+          border-top: 2px solid #fff;
+          border-left: 2px solid #fff;
+          border-right: 2px solid #404040;
+          border-bottom: 2px solid #404040;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .win95-btn:active,
+        .win95-btn.active {
+          border-top: 2px solid #404040;
+          border-left: 2px solid #404040;
+          border-right: 2px solid #fff;
+          border-bottom: 2px solid #fff;
+          background: ${BONK_ORANGE};
+        }
+
+        .win95-btn:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        /* INPUT (SUNKEN) */
+        .win95-input {
+          height: 26px;
+          padding: 2px 6px;
+          background: #fff;
+          border-top: 2px solid #404040;
+          border-left: 2px solid #404040;
+          border-right: 2px solid #fff;
+          border-bottom: 2px solid #fff;
+          outline: none;
+          font-family: inherit;
+          font-size: 13px;
+        }
+
+        .win95-input:disabled {
+          background: #e0e0e0;
+        }
+
+        /* SPINNER */
+        .win95-spinner {
+          width: 16px;
+          height: 16px;
+          border: 2px solid #808080;
+          border-top: 2px solid ${BONK_ORANGE};
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 };

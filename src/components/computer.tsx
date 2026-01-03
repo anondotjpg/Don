@@ -186,7 +186,7 @@ const Computer3DWithVrm: React.FC<Computer3DWithVrmProps> = ({ selectedVrm }) =>
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0x000000, 1);
+    renderer.setClearColor(0xc0c0c0, 1);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     mountRef.current.appendChild(renderer.domElement);
@@ -443,57 +443,59 @@ const Computer3DWithVrm: React.FC<Computer3DWithVrmProps> = ({ selectedVrm }) =>
 
 
 
-    // Floor
+    // Desk Surface (formerly Floor)
     const floorGeometry = new THREE.PlaneGeometry(10, 5);
-    
+        
     const floorCanvas = document.createElement('canvas');
-    floorCanvas.width = 256;
-    floorCanvas.height = 256;
+    floorCanvas.width = 512; // Increased resolution for wood grain detail
+    floorCanvas.height = 512;
     const floorCtx = floorCanvas.getContext('2d');
-    
+
     if (floorCtx) {
-      floorCtx.fillStyle = '#0f0f0f';
-      floorCtx.fillRect(0, 0, 256, 256);
+      // 1. Base Mahogany Color
+      floorCtx.fillStyle = '#4a1a08'; 
+      floorCtx.fillRect(0, 0, 512, 512);
       
-      for (let y = 0; y < 256; y += 4) {
-          for (let x = 0; x < 256; x += 4) {
-              if ((Math.floor(x / 4) + Math.floor(y / 4)) % 2 === 0) {
-                  floorCtx.fillStyle = '#1a1a1a';
-              } else {
-                  floorCtx.fillStyle = '#333333';
-              }
-              floorCtx.fillRect(x, y, 4, 4);
-          }
+      // 2. Create organic wood grain lines
+      for (let i = 0; i < 150; i++) {
+        floorCtx.strokeStyle = `rgba(35, 12, 4, ${Math.random() * 0.4})`;
+        floorCtx.lineWidth = Math.random() * 4 + 1;
+        floorCtx.beginPath();
+        
+        let x = Math.random() * 512;
+        floorCtx.moveTo(x, 0);
+        
+        // Use bezier curves for natural wood waviness
+        floorCtx.bezierCurveTo(
+          x + (Math.random() - 0.5) * 100, 170, 
+          x + (Math.random() - 0.5) * 100, 340, 
+          x, 512
+        );
+        floorCtx.stroke();
       }
       
-      floorCtx.strokeStyle = '#444444';
-      floorCtx.lineWidth = 1;
-      
-      for (let i = 0; i < 256; i += 4) {
-          floorCtx.beginPath();
-          floorCtx.moveTo(0, i);
-          floorCtx.lineTo(256, i);
-          floorCtx.stroke();
-      }
-      
-      for (let i = 0; i < 256; i += 4) {
-          floorCtx.beginPath();
-          floorCtx.moveTo(i, 0);
-          floorCtx.lineTo(i, 256);
-          floorCtx.stroke();
-      }
+      // 3. Add a "Polished" sheen gradient
+      const gradient = floorCtx.createLinearGradient(0, 0, 512, 512);
+      gradient.addColorStop(0, 'rgba(255, 255, 255, 0.05)');
+      gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0)');
+      gradient.addColorStop(1, 'rgba(255, 255, 255, 0.05)');
+      floorCtx.fillStyle = gradient;
+      floorCtx.fillRect(0, 0, 512, 512);
     }
-    
-    const carbonTexture = new THREE.CanvasTexture(floorCanvas);
-    carbonTexture.wrapS = THREE.RepeatWrapping;
-    carbonTexture.wrapT = THREE.RepeatWrapping;
-    carbonTexture.repeat.set(8, 8);
-    
-    const floorMaterial = new THREE.MeshLambertMaterial({ 
-        map: carbonTexture,
-        color: 0x888888
+
+    const woodTexture = new THREE.CanvasTexture(floorCanvas);
+    woodTexture.wrapS = THREE.RepeatWrapping;
+    woodTexture.wrapT = THREE.RepeatWrapping;
+    // Lower repeat count makes the grain look larger and more like a furniture slab
+    woodTexture.repeat.set(2, 1);
+
+    const floorMaterial = new THREE.MeshStandardMaterial({ 
+        map: woodTexture,
+        roughness: 0.15, // Low roughness for a high-end polished look
+        metalness: 0.05,
+        color: 0xffffff
     });
-    
+
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = -0.6;

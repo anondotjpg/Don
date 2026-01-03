@@ -153,16 +153,23 @@ export class Viewer {
   public resetCamera() {
     const headNode = this.model?.vrm?.humanoid.getNormalizedBoneNode("head");
     if (!headNode || !this._camera) return;
-
+  
     const headPos = headNode.getWorldPosition(new THREE.Vector3());
-
+  
+    const CAMERA_Y_OFFSET = 0.15; // ⬇️ tweak this
+  
     this._camera.position.set(
       this._camera.position.x,
-      headPos.y,
+      headPos.y + CAMERA_Y_OFFSET,
       this._camera.position.z
     );
-
-    this._cameraControls?.target.copy(headPos);
+  
+    this._cameraControls?.target.set(
+      headPos.x,
+      headPos.y + CAMERA_Y_OFFSET,
+      headPos.z
+    );
+  
     this._cameraControls?.update();
   }
 
