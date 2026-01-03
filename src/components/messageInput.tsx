@@ -31,9 +31,9 @@ export const MessageInput = ({
   const templateMessages = [
     "what's happening?",
     'trending now',
-    'for you',
+    'who are you?',
     'explore',
-    'spaces',
+    "what's up?",
   ];
 
   const handleTemplateClick = (template: string) => {
