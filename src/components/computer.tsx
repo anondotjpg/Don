@@ -463,7 +463,119 @@ const Computer3DWithVrm: React.FC<Computer3DWithVrmProps> = ({ selectedVrm }) =>
     scrollWheelMesh.castShadow = true;
     computerGroup.add(scrollWheelMesh);
 
+    // ============================================
+    // BIG RED EASY BUTTON (Staples style)
+    // ============================================
+    const easyButtonGroup = new THREE.Group();
+    
+    // Smooth black base
+    const buttonBaseGeometry = new THREE.CylinderGeometry(0.12, 0.14, 0.04, 64);
+    const buttonBaseMaterial = new THREE.MeshPhongMaterial({ 
+      color: 0x222222,
+      shininess: 60
+    });
+    const buttonBase = new THREE.Mesh(buttonBaseGeometry, buttonBaseMaterial);
+    buttonBase.castShadow = true;
+    buttonBase.receiveShadow = true;
+    easyButtonGroup.add(buttonBase);
 
+    // Big smooth red dome button
+    const buttonDomeGeometry = new THREE.SphereGeometry(0.1, 64, 32, 0, Math.PI * 2, 0, Math.PI / 2);
+    const buttonDomeMaterial = new THREE.MeshPhongMaterial({ 
+      color: 0xdd0000,
+      shininess: 90,
+      specular: 0x666666
+    });
+    const buttonDome = new THREE.Mesh(buttonDomeGeometry, buttonDomeMaterial);
+    buttonDome.position.y = 0.02;
+    buttonDome.castShadow = true;
+    easyButtonGroup.add(buttonDome);
+
+    // Position the button on the desk
+    easyButtonGroup.position.set(-1.2, -0.58, 0.5);
+    computerGroup.add(easyButtonGroup);
+
+    // ============================================
+    // REDACTED WHITE DOCUMENTS (simple flat planes)
+    // ============================================
+    
+    // Pre-generate document textures once
+    const createDocTexture = (seed: number) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 128;
+      canvas.height = 180;
+      const ctx = canvas.getContext('2d');
+      
+      if (ctx) {
+        // White background
+        ctx.fillStyle = '#f8f8f5';
+        ctx.fillRect(0, 0, 128, 180);
+        
+        // Header
+        ctx.fillStyle = '#333333';
+        ctx.font = 'bold 8px Arial';
+        ctx.fillText('CLASSIFIED', 38, 12);
+        
+        ctx.font = '6px Arial';
+        ctx.fillText('TOP SECRET', 45, 22);
+        
+        // Redacted lines - deterministic based on seed
+        ctx.fillStyle = '#000000';
+        const rng = (s: number) => {
+          const x = Math.sin(s) * 10000;
+          return x - Math.floor(x);
+        };
+        
+        for (let i = 0; i < 12; i++) {
+          const y = 35 + i * 11;
+          const barWidth = 70 + rng(seed + i) * 40;
+          const barStart = 10 + rng(seed + i + 100) * 8;
+          ctx.fillRect(barStart, y, barWidth, 6);
+        }
+        
+        // Footer
+        ctx.fillStyle = '#999999';
+        ctx.font = '5px Arial';
+        ctx.fillText('Page 1 of [REDACTED]', 35, 172);
+      }
+      
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      return texture;
+    };
+
+    // Create simple flat document meshes
+    const docTexture1 = createDocTexture(1);
+    const docTexture2 = createDocTexture(2);
+    const docTexture3 = createDocTexture(3);
+
+    const createDocument = (texture: THREE.Texture, x: number, z: number, rotY: number, yOffset: number) => {
+      const docGeometry = new THREE.PlaneGeometry(0.22, 0.3);
+      const docMaterial = new THREE.MeshBasicMaterial({ 
+        map: texture,
+        side: THREE.FrontSide,
+        depthWrite: true,
+        polygonOffset: true,
+        polygonOffsetFactor: -1,
+        polygonOffsetUnits: -1
+      });
+      const doc = new THREE.Mesh(docGeometry, docMaterial);
+      doc.rotation.x = -Math.PI / 2;
+      doc.rotation.z = rotY;
+      doc.position.set(x, -0.55 + yOffset, z);
+      doc.renderOrder = 10 + yOffset * 1000;
+      return doc;
+    };
+
+    const doc1 = createDocument(docTexture1, 1.3, 0.35, 0.1, 0);
+    computerGroup.add(doc1);
+
+    const doc2 = createDocument(docTexture2, 1.45, 0.55, -0.2, 0.01);
+    computerGroup.add(doc2);
+
+    const doc3 = createDocument(docTexture3, 1.25, 0.6, 0.35, 0.02);
+    computerGroup.add(doc3);
 
     // Desk Surface (formerly Floor)
     const floorGeometry = new THREE.PlaneGeometry(10, 5);
