@@ -24,6 +24,8 @@ import { CopyToClipboard } from "@/components/copy";
 import Computer3DWithVrm from "@/components/computer";
 import HyperTextDemo from "@/components/hyper";
 import { Settings } from "@/components/settings";
+import { TopNews95 } from "@/components/TopNews95";
+
 
 const inter = Inter({
   subsets: ["latin"],
@@ -344,6 +346,7 @@ export default function Home() {
   return (
     <div className={inter.className}>
       <Meta />
+      <TopNews95 />
       <Computer3DWithVrm selectedVrm={4} />
       <CopyToClipboard textToCopy="xxxxxx" />
       <div className="">

@@ -35,7 +35,7 @@ export const CopyToClipboard = ({ textToCopy }: Props) => {
   }, [textToCopy]);
 
   return (
-    <div className="absolute top-[6px] right-[6px] z-50">
+    <div className="absolute top-[6px] right-[6px] z-50 hidden">
       <div className="flex items-center gap-2">
         {/* X link moved to the left */}
         <a 
@@ -49,14 +49,14 @@ export const CopyToClipboard = ({ textToCopy }: Props) => {
         >
           <img 
             src="x.png" 
-            alt="Follow me onX" 
+            alt="Follow me on X" 
             style={{ width: '12px', height: '12px' }}
           />
         </a>
         
         {/* Copy button */}
         <motion.button
-          className="flex items-center justify-center p-4 rounded-md focus:outline-none bg-gray-800 text-[#b2b2b2] text-[10px]"
+          className="flex items-center justify-center p-4 rounded-md focus:outline-none bg-gray-800 text-[#000] text-[10px]"
           onClick={handleCopy}
           whileTap={{ scale: 0.95 }}
         >
