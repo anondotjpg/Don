@@ -43,7 +43,7 @@ function CoinList({ coins }: { coins: Coin[] }) {
         return (
           <span
             key={coin.symbol}
-            style={{ marginRight: 28, color: "#000" }}
+            style={{ marginRight: 12, color: "#000" }}
           >
             <strong>{coin.symbol}</strong>{" "}
             {formatPrice(coin.price)}{" "}
@@ -156,11 +156,11 @@ export function CryptoMarquee95() {
           }}
         >
           {/* First copy */}
-          <div style={{ display: "inline-block", paddingRight: 28 }}>
+          <div style={{ display: "inline-block", paddingRight: 12 }}>
             <CoinList coins={coins} />
           </div>
           {/* Second copy for seamless loop */}
-          <div style={{ display: "inline-block", paddingRight: 28 }}>
+          <div style={{ display: "inline-block", paddingRight: 12 }}>
             <CoinList coins={coins} />
           </div>
         </div>
