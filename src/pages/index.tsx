@@ -25,7 +25,7 @@ import Computer3DWithVrm from "@/components/computer";
 import HyperTextDemo from "@/components/hyper";
 import { Settings } from "@/components/settings";
 import { TopNews95 } from "@/components/TopNews95";
-
+import { CryptoMarquee95 } from "@/components/CryptoMarquee95";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -349,9 +349,11 @@ export default function Home() {
       <div className="">
         
       </div>
-      <TopNews95 />
+      <div className="desktop-only-widgets">
+        <TopNews95 />
+        <CryptoMarquee95 />
+      </div>
       <Computer3DWithVrm selectedVrm={4} />
-      <CopyToClipboard textToCopy="xxxxxxxxxx" />
       <div className="">
         <MessageInputContainer
           isChatProcessing={chatProcessing}
@@ -359,6 +361,18 @@ export default function Home() {
         />
       </div>
       <GitHubLink />
+
+      <style jsx>{`
+        .desktop-only-widgets {
+          display: none;
+        }
+        
+        @media (min-width: 768px) {
+          .desktop-only-widgets {
+            display: block;
+          }
+        }
+      `}</style>
     </div>
   );
 }
