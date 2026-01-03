@@ -186,10 +186,32 @@ const Computer3DWithVrm: React.FC<Computer3DWithVrmProps> = ({ selectedVrm }) =>
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0xc0c0c0, 1);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     mountRef.current.appendChild(renderer.domElement);
+
+    // Load and blur background image
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load('/room.jpg', (texture) => {
+      const blurCanvas = document.createElement('canvas');
+      const blurCtx = blurCanvas.getContext('2d');
+      
+      const img = texture.image;
+      blurCanvas.width = img.width;
+      blurCanvas.height = img.height;
+      
+      if (blurCtx) {
+        blurCtx.filter = 'blur(2px)';
+        blurCtx.drawImage(img, 0, 0);
+        
+        const blurredTexture = new THREE.CanvasTexture(blurCanvas);
+        blurredTexture.encoding = THREE.sRGBEncoding; // Use this for older Three.js
+        scene.background = blurredTexture;
+      }
+    }, undefined, (error) => {
+      console.error('Failed to load room.jpg:', error);
+      scene.background = new THREE.Color(0xc0c0c0);
+    });
 
     // Store refs
     sceneRef.current = scene;
