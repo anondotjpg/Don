@@ -351,7 +351,7 @@ export default function Home() {
       </div>
       <TopNews95 />
       <Computer3DWithVrm selectedVrm={4} />
-      <CopyToClipboard textToCopy="xxxxxx" />
+      <CopyToClipboard textToCopy="xxxxxxxxxx" />
       <div className="">
         <MessageInputContainer
           isChatProcessing={chatProcessing}
