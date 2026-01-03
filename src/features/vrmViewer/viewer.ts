@@ -95,11 +95,15 @@ export class Viewer {
     /**
      * ✅ COLOR PIPELINE
      */
-    this._renderer.outputColorSpace = THREE.SRGBColorSpace;
+    /**
+     * ✅ COLOR PIPELINE (TS SAFE)
+     */
+    this._renderer.outputEncoding = THREE.sRGBEncoding;
     this._renderer.toneMapping = THREE.NoToneMapping;
     this._renderer.toneMappingExposure = 1.0;
     this._renderer.physicallyCorrectLights = false;
     this._renderer.shadowMap.enabled = false;
+
 
     this._renderer.setSize(width, height);
     this._renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -107,11 +111,15 @@ export class Viewer {
     /**
      * ✅ SAFE BACKGROUND LOAD (CLIENT ONLY)
      */
+    /**
+     * ✅ SAFE BACKGROUND LOAD (CLIENT ONLY)
+     */
     const loader = new THREE.TextureLoader();
     loader.load("/bg.jpg", (texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.encoding = THREE.sRGBEncoding;
       this._scene.background = texture;
     });
+
 
     this._camera = new THREE.PerspectiveCamera(20, width / height, 0.1, 20);
     this._camera.position.set(0, 1.35, 3.2);
