@@ -14,8 +14,9 @@ type Props = {
   onClickMicButton: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
-const PUMP_GREEN = '#00FFA3';
-const PUMP_GREEN_DARK = '#00E693';
+/** 🟠 Bonk.fun orange */
+const BONK_ORANGE = '#FF9A00';
+const BONK_ORANGE_DARK = '#FF8700';
 
 export const MessageInput = ({
   userMessage,
@@ -109,7 +110,7 @@ export const MessageInput = ({
           disabled={isChatProcessing}
           onClick={onClickMicButton}
           style={{
-            backgroundColor: isMicRecording ? PUMP_GREEN : 'transparent',
+            backgroundColor: isMicRecording ? BONK_ORANGE : 'transparent',
             border: 'none',
             borderRadius: '50%',
             padding: '8px',
@@ -125,21 +126,21 @@ export const MessageInput = ({
           onMouseEnter={(e) => {
             if (!isChatProcessing) {
               e.currentTarget.style.backgroundColor = isMicRecording
-                ? PUMP_GREEN_DARK
-                : 'rgba(0, 255, 163, 0.12)';
+                ? BONK_ORANGE_DARK
+                : 'rgba(255, 154, 0, 0.14)';
             }
           }}
           onMouseLeave={(e) => {
             if (!isChatProcessing) {
               e.currentTarget.style.backgroundColor = isMicRecording
-                ? PUMP_GREEN
+                ? BONK_ORANGE
                 : 'transparent';
             }
           }}
         >
           <HiMicrophone
             size={20}
-            color={isMicRecording ? '#000000' : PUMP_GREEN}
+            color={isMicRecording ? '#000000' : BONK_ORANGE}
           />
         </button>
 
@@ -171,7 +172,7 @@ export const MessageInput = ({
               width: '20px',
               height: '20px',
               border: '2px solid #2F3336',
-              borderTop: `2px solid ${PUMP_GREEN}`,
+              borderTop: `2px solid ${BONK_ORANGE}`,
               borderRadius: '50%',
               animation: 'spin 1s linear infinite',
             }}
@@ -192,7 +193,7 @@ export const MessageInput = ({
           >
             <RiSendPlaneFill
               size={18}
-              color={userMessage ? PUMP_GREEN : '#808080'}
+              color={userMessage ? BONK_ORANGE : '#808080'}
             />
           </button>
         )}

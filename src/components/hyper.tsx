@@ -64,7 +64,7 @@ const HyperText: React.FC<HyperTextProps> = ({
 const HyperTextDemo: React.FC = () => {
   return (
     <HyperText 
-      text="Pump-San v0.1"
+      text="Don"
     />
   );
 };

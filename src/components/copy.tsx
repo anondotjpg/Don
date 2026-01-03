@@ -39,7 +39,7 @@ export const CopyToClipboard = ({ textToCopy }: Props) => {
       <div className="flex items-center gap-2">
         {/* X link moved to the left */}
         <a 
-          href="https://x.com/pumpsanlive" 
+          href="https://x.com" 
           target="_blank" 
           rel="noopener noreferrer"
           style={{ 

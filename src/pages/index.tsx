@@ -345,7 +345,7 @@ export default function Home() {
     <div className={inter.className}>
       <Meta />
       <Computer3DWithVrm selectedVrm={4} />
-      <CopyToClipboard textToCopy="Gc59Jm3Gowd7HX8uPoBcmuExw5GQCVoyMYMgPhWhpump" />
+      <CopyToClipboard textToCopy="xxxxxx" />
       <div className="">
         <MessageInputContainer
           isChatProcessing={chatProcessing}

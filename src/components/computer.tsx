@@ -201,6 +201,10 @@ const Computer3DWithVrm: React.FC<Computer3DWithVrmProps> = ({ selectedVrm }) =>
     compositeCanvas.height = 384;
     const canvasTexture = new THREE.CanvasTexture(compositeCanvas);
     canvasTexture.flipY = false;
+    // Improve texture filtering to reduce edge artifacts
+    canvasTexture.minFilter = THREE.LinearFilter;
+    canvasTexture.magFilter = THREE.LinearFilter;
+    canvasTexture.generateMipmaps = false;
 
     // Create overlay canvas for HyperText
     const overlayCanvas = document.createElement('canvas');
@@ -239,15 +243,44 @@ const Computer3DWithVrm: React.FC<Computer3DWithVrmProps> = ({ selectedVrm }) =>
     monitor.castShadow = true;
     computerGroup.add(monitor);
 
-    // Screen with composite texture
-    const screenGeometry = new THREE.BoxGeometry(1.8, 1.3, 0.05);
+    // Screen with composite texture - using PlaneGeometry to eliminate edge artifacts
+    // Slightly smaller than the monitor face and using a plane instead of box
+    const screenGeometry = new THREE.PlaneGeometry(1.75, 1.25);
     const screenMaterial = new THREE.MeshBasicMaterial({ 
       map: canvasTexture,
-      color: 0xffffff
+      color: 0xffffff,
+      side: THREE.FrontSide,
+      depthWrite: true
     });
     const screen = new THREE.Mesh(screenGeometry, screenMaterial);
-    screen.position.set(0, 0.35, 0.08);
+    // Position slightly in front of monitor to prevent z-fighting
+    screen.position.set(0, 0.35, 0.051);
     computerGroup.add(screen);
+
+    // Add a thin bezel/frame around the screen to hide any edge artifacts
+    const bezelMaterial = new THREE.MeshLambertMaterial({ color: 0x0a0a0a });
+    
+    // Top bezel
+    const topBezelGeom = new THREE.BoxGeometry(1.8, 0.03, 0.02);
+    const topBezel = new THREE.Mesh(topBezelGeom, bezelMaterial);
+    topBezel.position.set(0, 0.35 + 0.64, 0.055);
+    computerGroup.add(topBezel);
+    
+    // Bottom bezel
+    const bottomBezel = new THREE.Mesh(topBezelGeom, bezelMaterial);
+    bottomBezel.position.set(0, 0.35 - 0.64, 0.055);
+    computerGroup.add(bottomBezel);
+    
+    // Left bezel
+    const sideBezelGeom = new THREE.BoxGeometry(0.03, 1.3, 0.02);
+    const leftBezel = new THREE.Mesh(sideBezelGeom, bezelMaterial);
+    leftBezel.position.set(-0.89, 0.35, 0.055);
+    computerGroup.add(leftBezel);
+    
+    // Right bezel
+    const rightBezel = new THREE.Mesh(sideBezelGeom, bezelMaterial);
+    rightBezel.position.set(0.89, 0.35, 0.055);
+    computerGroup.add(rightBezel);
 
     // Monitor base
     const baseGeometry = new THREE.CylinderGeometry(0.2, 0.2, 0.2, 32);
@@ -408,13 +441,7 @@ const Computer3DWithVrm: React.FC<Computer3DWithVrmProps> = ({ selectedVrm }) =>
     scrollWheelMesh.castShadow = true;
     computerGroup.add(scrollWheelMesh);
 
-    // Power button
-    const powerButtonGeometry = new THREE.CylinderGeometry(0.02, 0.02, 0.01, 16);
-    const powerButtonMaterial = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-    const powerButton = new THREE.Mesh(powerButtonGeometry, powerButtonMaterial);
-    powerButton.position.set(0.8, 0.3, 0.08);
-    powerButton.rotation.x = Math.PI / 2;
-    computerGroup.add(powerButton);
+
 
     // Floor
     const floorGeometry = new THREE.PlaneGeometry(10, 5);
@@ -567,19 +594,20 @@ const Computer3DWithVrm: React.FC<Computer3DWithVrmProps> = ({ selectedVrm }) =>
         if (vrmCanvasRef.current && overlayCanvasRef.current && canvasTexture) {
           const ctx = compositeCanvas.getContext('2d');
           if (ctx) {
-            // Clear composite canvas
-            ctx.clearRect(0, 0, 512, 384);
-            
+            // Bonk orange screen background
+            ctx.fillStyle = '#1a0f00';
+            ctx.fillRect(0, 0, 512, 384);
+
             // Draw VRM canvas (flipped vertically)
             ctx.save();
             ctx.scale(1, -1);
             ctx.translate(0, -384);
             ctx.drawImage(vrmCanvasRef.current, 0, 0, 512, 384);
             ctx.restore();
-            
-            // Draw HyperText overlay on top (already flipped in renderHyperTextOverlay)
+
+            // Draw HyperText overlay
             ctx.drawImage(overlayCanvasRef.current, 0, 0);
-            
+
             canvasTexture.needsUpdate = true;
           }
         }
@@ -593,10 +621,6 @@ const Computer3DWithVrm: React.FC<Computer3DWithVrmProps> = ({ selectedVrm }) =>
 
         // Gentle floating animation
         computerGroup.position.y = Math.sin(time) * 0.005;
-
-        // Power button glow
-        const powerGlow = 0.5 + Math.sin(time * 5) * 0.3;
-        powerButton.material.emissive.setHSL(0.33, 1, powerGlow * 0.5);
 
         renderer.render(scene, camera);
     };
