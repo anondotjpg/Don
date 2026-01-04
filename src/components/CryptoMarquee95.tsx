@@ -125,7 +125,7 @@ export function CryptoMarquee95() {
         <span>Crypto</span>
 
         <a
-          href="https://x.com/DononBonk"
+          href="https://truthsocial.com/@DontheDog"
           target="_blank"
           rel="noopener noreferrer"
         >
