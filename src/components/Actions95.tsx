@@ -28,7 +28,7 @@ export function Actions95() {
                 fontWeight: 700,
             }}
         >
-            Actions
+            NAV
         </div>
 
 
