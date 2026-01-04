@@ -115,6 +115,8 @@ export function CryptoMarquee95() {
           alignItems: "center",
           justifyContent: "space-between",
           background: "linear-gradient(90deg, #000080, #1084d0)",
+          fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+          fontWeight: 700,
           color: "#fff",
           padding: "4px 6px",
           fontSize: 16,

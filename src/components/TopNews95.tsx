@@ -59,6 +59,8 @@ export function TopNews95() {
           background: "linear-gradient(90deg, #000080, #1084d0)",
           color: "#fff",
           padding: "4px 6px",
+          fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+          fontWeight: 700,
           fontSize: 16,
         }}
       >

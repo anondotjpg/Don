@@ -26,6 +26,8 @@ import HyperTextDemo from "@/components/hyper";
 import { Settings } from "@/components/settings";
 import { TopNews95 } from "@/components/TopNews95";
 import { CryptoMarquee95 } from "@/components/CryptoMarquee95";
+import { Actions95 } from "@/components/Actions95";
+
 
 const inter = Inter({
   subsets: ["latin"],
@@ -352,6 +354,7 @@ export default function Home() {
       <div className="desktop-only-widgets">
         <TopNews95 />
         <CryptoMarquee95 />
+        <Actions95 />
       </div>
       <Computer3DWithVrm selectedVrm={4} />
       <div className="">
