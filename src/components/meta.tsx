@@ -4,7 +4,7 @@ import Head from "next/head";
 export const Meta = () => {
   const title = "Don";
   const description =
-    "Don";
+    "Don. The Dog. Running things.";
   const imageUrl = "/pump.png";
   const faviconUrl = "/pump.ico";  // Replace with your favicon path if different
 
