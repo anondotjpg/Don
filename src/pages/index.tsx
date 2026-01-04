@@ -27,6 +27,7 @@ import { Settings } from "@/components/settings";
 import { TopNews95 } from "@/components/TopNews95";
 import { CryptoMarquee95 } from "@/components/CryptoMarquee95";
 import { Actions95 } from "@/components/Actions95";
+import { AddyModal95 } from "@/components/AddyModal95";
 
 
 const inter = Inter({
@@ -354,6 +355,7 @@ export default function Home() {
       <div className="desktop-only-widgets">
         <TopNews95 />
         <CryptoMarquee95 />
+        <AddyModal95 addy={"xxxxxxxxxxx"} />
         <div className="desktop-only-widgetz">
           <Actions95 />
         </div>
