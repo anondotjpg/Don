@@ -116,11 +116,6 @@ export const MessageInput = ({
           padding: 6px;
           justify-content: center;   /* 👈 CENTER HORIZONTALLY */
           align-items: center;
-          background: #c0c0c0;
-          border-top: 2px solid #fff;
-          border-left: 2px solid #fff;
-          border-right: 2px solid #808080;
-          border-bottom: 2px solid #808080;
         }
 
 
