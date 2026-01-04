@@ -74,7 +74,7 @@ function Win95Button({ children }: { children: React.ReactNode }) {
           padding: '6px 0',
           background: '#e0e0e0',
           color: '#262626',
-          fontFamily: 'VT323, monospace',
+          fontWeight: 800,
           fontSize: 16,
           cursor: 'not-allowed',
           display: 'flex',
