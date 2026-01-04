@@ -122,7 +122,7 @@ export function CryptoMarquee95() {
           fontSize: 16,
         }}
       >
-        <span>Crypto Prices</span>
+        <span>Crypto</span>
 
         <a
           href="https://truthsocial.com/@DontheDog"
