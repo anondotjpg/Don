@@ -354,7 +354,9 @@ export default function Home() {
       <div className="desktop-only-widgets">
         <TopNews95 />
         <CryptoMarquee95 />
-        <Actions95 />
+        <div className="desktop-only-widgetz">
+          <Actions95 />
+        </div>
       </div>
       <Computer3DWithVrm selectedVrm={4} />
       <div className="">
@@ -372,6 +374,16 @@ export default function Home() {
         
         @media (min-width: 768px) {
           .desktop-only-widgets {
+            display: block;
+          }
+        }
+
+        .desktop-only-widgetz {
+          display: none;
+        }
+        
+        @media (min-width: 1100px) {
+          .desktop-only-widgetz {
             display: block;
           }
         }
